@@ -41,6 +41,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.woof.data.Dog
@@ -78,7 +80,7 @@ fun WoofApp() {
 @Composable
 fun WoofTopAppBar(modifier: Modifier = Modifier) {
     Row(modifier = modifier
-        .fillMaxWidth()
+        .fillMaxWidth().semantics(mergeDescendants = true, properties = {})
         .background(color = MaterialTheme.colors.primary), verticalAlignment = Alignment.CenterVertically) {
         Image(painter = painterResource(id = R.drawable.ic_woof_logo), contentDescription = null, modifier = Modifier
             .size(64.dp)
@@ -102,7 +104,7 @@ fun DogItem(dog: Dog, modifier: Modifier = Modifier) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
+                    .padding(8.dp).semantics(mergeDescendants = true) {}
             ) {
                 DogIcon(dog.imageResourceId)
                 DogInformation(dog.name, dog.age)
@@ -118,7 +120,7 @@ fun DogItem(dog: Dog, modifier: Modifier = Modifier) {
 
 @Composable
 private fun DogItemButton(expanded: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    IconButton(onClick = onClick) {
+    IconButton(onClick = onClick, modifier = modifier.clearAndSetSemantics {}) {
        Icon(imageVector = if(expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
            tint = MaterialTheme.colors.secondary,
            contentDescription = stringResource(
@@ -129,7 +131,7 @@ private fun DogItemButton(expanded: Boolean, onClick: () -> Unit, modifier: Modi
 
 @Composable
 fun DogHobby(@StringRes dogHobby: Int, modifier: Modifier = Modifier) {
-    Column(modifier = modifier.padding(start = 16.dp, top = 8.dp, bottom = 16.dp, end = 16.dp)) {
+    Column(modifier = modifier.padding(start = 16.dp, top = 8.dp, bottom = 16.dp, end = 16.dp).semantics(mergeDescendants = true) {}) {
         Text(text = stringResource(id = R.string.about), style = MaterialTheme.typography.h3)
         Text(text = stringResource(id = dogHobby), style = MaterialTheme.typography.body1)
     }
@@ -167,7 +169,7 @@ fun DogIcon(@DrawableRes dogIcon: Int, modifier: Modifier = Modifier) {
  */
 @Composable
 fun DogInformation(@StringRes dogName: Int, dogAge: Int, modifier: Modifier = Modifier) {
-    Column {
+    Column(Modifier.semantics(mergeDescendants = true) {}) {
         Text(
             text = stringResource(dogName),
             modifier = modifier.padding(top = 8.dp),
